@@ -185,54 +185,18 @@ async function sendContactEmail(contact: {
 }) {
   console.log("CONTACT CAPTURED:", JSON.stringify(contact));
 
-  const resendKey = process.env.RESEND_API_KEY;
-  if (resendKey) {
-    // Send via Resend (free tier: 100 emails/month)
-    try {
-      await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${resendKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          from: "Beyond AI <noreply@atbeyond.com>",
-          to: "stephen.a.hewett@gmail.com",
-          subject: `New enquiry from ${contact.name} at ${contact.company}`,
-          html: `
-            <h2>New Beyond Enquiry</h2>
-            <p><strong>Name:</strong> ${contact.name}</p>
-            <p><strong>Email:</strong> <a href="mailto:${contact.email}">${contact.email}</a></p>
-            <p><strong>Company:</strong> ${contact.company}</p>
-            <h3>Challenge</h3>
-            <p>${contact.challenge}</p>
-            <hr />
-            <p style="color: #888; font-size: 12px;">Captured by Beyond AI assistant</p>
-          `,
-        }),
-      });
-    } catch (e) {
-      console.error("Failed to send via Resend:", e);
+  // Store contact in Firestore via Cloud Run backend
+  const backendUrl = process.env.BACKEND_API_URL || "https://echo-api-kqvwzvsixq-nw.a.run.app";
+  try {
+    const res = await fetch(`${backendUrl}/api/contacts`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(contact),
+    });
+    if (!res.ok) {
+      console.error("Backend contact API error:", res.status, await res.text());
     }
-    return;
-  }
-
-  // Fallback: webhook
-  const webhookUrl = process.env.CONTACT_WEBHOOK_URL;
-  if (webhookUrl) {
-    try {
-      await fetch(webhookUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          to: "stephen.a.hewett@gmail.com",
-          subject: `Beyond enquiry from ${contact.name} at ${contact.company}`,
-          body: `Name: ${contact.name}\nEmail: ${contact.email}\nCompany: ${contact.company}\n\nChallenge:\n${contact.challenge}`,
-          contact,
-        }),
-      });
-    } catch (e) {
-      console.error("Failed to send contact webhook:", e);
-    }
+  } catch (e) {
+    console.error("Failed to send contact to backend:", e);
   }
 }
