@@ -149,8 +149,14 @@ export async function POST(request: NextRequest) {
             controller.enqueue(
               encoder.encode(`data: ${JSON.stringify({ contact })}\n\n`)
             );
+            // Build conversation transcript for the email
+            const transcript = messages
+              .map((m: { role: string; content: string }) =>
+                `${m.role === "user" ? "Visitor" : "Beyond AI"}: ${m.content}`
+              )
+              .join("\n\n");
             // Send email notification
-            await sendContactEmail(contact);
+            await sendContactEmail(contact, transcript);
           } catch {
             // Ignore parse errors
           }
@@ -182,7 +188,7 @@ async function sendContactEmail(contact: {
   email: string;
   company: string;
   challenge: string;
-}) {
+}, transcript?: string) {
   console.log("CONTACT CAPTURED:", JSON.stringify(contact));
 
   // Store contact in Firestore via Cloud Run backend
@@ -191,7 +197,7 @@ async function sendContactEmail(contact: {
     const res = await fetch(`${backendUrl}/api/contacts`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(contact),
+      body: JSON.stringify({ ...contact, transcript: transcript || "" }),
     });
     if (!res.ok) {
       console.error("Backend contact API error:", res.status, await res.text());
