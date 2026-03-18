@@ -1,0 +1,143 @@
+@import "tailwindcss";
+
+:root {
+  --background: #000000;
+  --foreground: #ededed;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-beyond-surface: #131313;
+  --color-beyond-surface-low: #1b1b1b;
+  --color-beyond-surface-container: #1f1f1f;
+  --color-beyond-surface-high: #2a2a2a;
+  --color-beyond-surface-highest: #353535;
+  --color-beyond-surface-lowest: #0e0e0e;
+  --color-beyond-tertiary: #7df4ff;
+  --color-beyond-tertiary-container: #00a0aa;
+  --color-beyond-outline: #919191;
+  --color-beyond-outline-variant: #474747;
+  --color-beyond-on-surface: #e2e2e2;
+  --color-beyond-on-surface-variant: #c6c6c6;
+  --color-beyond-secondary: #c7c6c6;
+  --font-sans: var(--font-inter);
+  --font-headline: var(--font-space-grotesk);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+}
+
+.kinetic-gradient {
+  background: linear-gradient(135deg, #ffffff 0%, #c7c6c6 100%);
+}
+
+.glass-card {
+  background: rgba(27, 27, 27, 0.4);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+.monolith-border {
+  border: 1px solid rgba(71, 71, 71, 0.15);
+}
+
+.text-glow {
+  text-shadow: 0 0 20px rgba(125, 244, 255, 0.3);
+}
+
+@keyframes scroll-left {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes scroll-right {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+.animate-scroll-left {
+  animation: scroll-left 40s linear infinite;
+}
+
+.animate-scroll-right {
+  animation: scroll-right 45s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-scroll-left,
+  .animate-scroll-right {
+    animation: none;
+  }
+}
+
+/* ── Beyond AI Chat ── */
+
+.beyond-grid-bg {
+  background-image:
+    linear-gradient(rgba(125, 244, 255, 0.15) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(125, 244, 255, 0.15) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+@keyframes scan {
+  0% { transform: translateY(-100vh); }
+  100% { transform: translateY(100vh); }
+}
+
+.beyond-scan-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(125, 244, 255, 0.6), transparent);
+  box-shadow: 0 0 30px 10px rgba(125, 244, 255, 0.15);
+  animation: scan 2s ease-in-out infinite;
+}
+
+@keyframes boot-line-in {
+  from { opacity: 0; transform: translateX(-8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.beyond-boot-line {
+  animation: boot-line-in 0.3s ease-out forwards;
+}
+
+@keyframes message-enter {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.beyond-message-enter {
+  animation: message-enter 0.4s ease-out forwards;
+}
+
+@keyframes input-enter {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.beyond-input-enter {
+  animation: input-enter 0.6s ease-out 0.3s both;
+}
+
+.beyond-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.beyond-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.beyond-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(125, 244, 255, 0.15);
+  border-radius: 2px;
+}
+
+.beyond-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(125, 244, 255, 0.3);
+}
