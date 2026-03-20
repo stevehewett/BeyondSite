@@ -197,7 +197,11 @@ async function sendContactEmail(contact: {
     const res = await fetch(`${backendUrl}/api/contacts`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...contact, transcript: transcript || "" }),
+      body: JSON.stringify({
+        ...contact,
+        transcript: transcript || "",
+        notifyEmails: ["joe@atbeyond.com", "steve@atbeyond.com", "rob@atbeyond.com", "info@atbeyond.com"],
+      }),
     });
     if (!res.ok) {
       console.error("Backend contact API error:", res.status, await res.text());
