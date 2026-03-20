@@ -200,7 +200,7 @@ async function sendContactEmail(contact: {
       body: JSON.stringify({
         ...contact,
         transcript: transcript || "",
-        notifyEmails: ["joe@atbeyond.com", "steve@atbeyond.com", "rob@atbeyond.com"],
+        notifyEmails: ["joe@atbeyond.com", "steve@atbeyond.com", "rob@atbeyond.com", "info@atbeyond.com"],
       }),
     });
     if (!res.ok) {
